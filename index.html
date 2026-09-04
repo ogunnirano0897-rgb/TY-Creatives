@@ -1,8 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>TY Creatives</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TY Creatives | Flier & Visual Design Studio</title>
+<meta name="description" content="TY Creatives designs eye-catching fliers for events, businesses, and personal brands. Get a flier that stops the scroll.">
+
+<!-- Open Graph tags so this looks good when shared -->
+<meta property="og:title" content="TY Creatives | Flier & Visual Design Studio">
+<meta property="og:description" content="Designs that make people stop scrolling. Flier design for events, businesses, and personal brands.">
+<meta property="og:type" content="website">
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
     :root {
@@ -58,6 +66,15 @@
     }
 
     nav a:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* small CTA button that only shows once you scroll past the hero */
+    .nav-cta {
+        background: var(--gold);
+        color: var(--ink) !important;
+        padding: 8px 16px;
+        border-radius: 2px;
+        font-weight: 600;
+    }
 
     .hero {
         min-height: 78vh;
@@ -177,6 +194,7 @@
         position: relative;
         overflow: hidden;
         transition: transform 0.3s, border-color 0.3s;
+        cursor: pointer;
     }
 
     .flier-card::before {
@@ -189,6 +207,7 @@
         border-radius: 50%;
         background: var(--gold);
         opacity: 0.7;
+        z-index: 2;
     }
 
     .flier-card:hover {
@@ -200,6 +219,40 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+
+    .flier-card img.loaded { opacity: 1; }
+
+    /* caption that slides up on hover */
+    .flier-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+        color: var(--paper);
+        font-size: 12px;
+        letter-spacing: 1px;
+        text-transform: none;
+        padding: 24px 14px 12px;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+    }
+
+    .flier-card:hover .flier-caption { transform: translateY(0); }
+
+    /* scroll-in animation */
+    .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.in-view {
+        opacity: 1;
+        transform: translateY(0);
     }
 
     #contact { text-align: center; }
@@ -252,6 +305,40 @@
 
     footer p { margin: 4px 0; font-size: 13px; letter-spacing: 1px; }
 
+    /* lightbox */
+    .lightbox {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(11,11,12,0.94);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox img {
+        max-width: 90vw;
+        max-height: 85vh;
+        object-fit: contain;
+        border: 2px solid var(--gold);
+    }
+
+    .lightbox-close {
+        position: absolute;
+        top: 24px;
+        right: 32px;
+        color: var(--paper);
+        font-size: 32px;
+        cursor: pointer;
+        line-height: 1;
+        font-family: 'Work Sans', sans-serif;
+    }
+
+    .lightbox-close:hover { color: var(--gold); }
+
     @media (max-width: 700px) {
         header { padding: 18px 20px; flex-direction: column; gap: 14px; }
         nav a { margin: 0 12px; }
@@ -268,7 +355,7 @@
         <nav>
             <a href="#about">About</a>
             <a href="#portfolio">Portfolio</a>
-            <a href="#contact">Contact</a>
+            <a href="#contact" class="nav-cta">Get a Flier</a>
         </nav>
     </header>
 
@@ -291,14 +378,34 @@
         <div class="section-label">Selected Work</div>
         <h2>Portfolio</h2>
         <div class="flier-grid">
-            <div class="flier-card"><img src="IMAGES/flier1.jpeg" alt="Birthday flier design for Oluwatoyosi"></div>
-            <div class="flier-card"><img src="IMAGES/flier2.png" alt="Birthday flier design"></div>
-            <div class="flier-card"><img src="IMAGES/flier3.jpeg" alt="Birthday flier design"></div>
-       <div class="flier-card"><img src="IMAGES/flier4.jpeg" alt="Birthday flier design"></div>
-       <div class="flier-card"><img src="IMAGES/flier5.jpeg" alt="Birthday flier design"></div>
-       <div class="flier-card"><img src="IMAGES/flier6.jpeg" alt="Birthday flier design"></div>
-       <div class="flier-card"><img src="IMAGES/flier7.jpeg" alt="Birthday flier design"></div>
-
+            <div class="flier-card reveal" data-full="IMAGES/flier1.jpeg">
+                <img src="IMAGES/flier1.jpeg" alt="Birthday flier design for Oluwatoyosi" loading="lazy" onload="this.classList.add('loaded')">
+                <div class="flier-caption">Birthday Flier</div>
+            </div>
+            <div class="flier-card reveal" data-full="IMAGES/flier2.png">
+                <img src="IMAGES/flier2.png" alt="Birthday flier design" loading="lazy" onload="this.classList.add('loaded')">
+                <div class="flier-caption">Birthday Flier</div>
+            </div>
+            <div class="flier-card reveal" data-full="IMAGES/flier3.jpeg">
+                <img src="IMAGES/flier3.jpeg" alt="Birthday flier design" loading="lazy" onload="this.classList.add('loaded')">
+                <div class="flier-caption">Birthday Flier</div>
+            </div>
+            <div class="flier-card reveal" data-full="IMAGES/flier4.jpeg">
+                <img src="IMAGES/flier4.jpeg" alt="Birthday flier design" loading="lazy" onload="this.classList.add('loaded')">
+                <div class="flier-caption">Birthday Flier</div>
+            </div>
+            <div class="flier-card reveal" data-full="IMAGES/flier5.jpeg">
+                <img src="IMAGES/flier5.jpeg" alt="Birthday flier design" loading="lazy" onload="this.classList.add('loaded')">
+                <div class="flier-caption">Birthday Flier</div>
+            </div>
+            <div class="flier-card reveal" data-full="IMAGES/flier6.jpeg">
+                <img src="IMAGES/flier6.jpeg" alt="Birthday flier design" loading="lazy" onload="this.classList.add('loaded')">
+                <div class="flier-caption">Birthday Flier</div>
+            </div>
+            <div class="flier-card reveal" data-full="IMAGES/flier7.jpeg">
+                <img src="IMAGES/flier7.jpeg" alt="Birthday flier design" loading="lazy" onload="this.classList.add('loaded')">
+                <div class="flier-caption">Birthday Flier</div>
+            </div>
         </div>
     </section>
 
@@ -315,6 +422,53 @@
         <div class="ty-icon">TY</div>
         <p>&copy; 2026 TY Creatives. All rights reserved.</p>
     </footer>
+
+    <!-- Lightbox for viewing fliers full-size -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" id="lightboxClose">&times;</span>
+        <img src="" alt="Full size flier" id="lightboxImg">
+    </div>
+
+    <script>
+        // Lightbox: click a flier card to see it full size
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxClose = document.getElementById('lightboxClose');
+
+        document.querySelectorAll('.flier-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const fullSrc = card.getAttribute('data-full');
+                lightboxImg.setAttribute('src', fullSrc);
+                lightbox.classList.add('open');
+            });
+        });
+
+        function closeLightbox() {
+            lightbox.classList.remove('open');
+            lightboxImg.setAttribute('src', '');
+        }
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        // Scroll-in animation for flier cards
+        const revealEls = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        revealEls.forEach(el => observer.observe(el));
+    </script>
 
 </body>
 </html>
